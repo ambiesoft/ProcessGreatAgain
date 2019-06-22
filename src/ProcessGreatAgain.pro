@@ -25,21 +25,49 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        ../lsMisc/stdQt/stdQt.cpp \
-        ../lsMisc/stdQt/stdQt_linux.cpp \
+        ../../lsMisc/stdQt/stdQt.cpp \
         main.cpp \
         mainwindow.cpp \
         systemprocessmodel.cpp
 
 HEADERS += \
-        ../lsMisc/stdQt/stdQt.h \
+        ../../lsMisc/stdQt/stdQt.h \
         mainwindow.h \
+        stdafx.h \
         systemprocessmodel.h
+
 
 FORMS += \
         mainwindow.ui
+
+win32 {
+    message("win32")
+    SOURCES += \
+            ../../lsMisc/GetLastErrorString.cpp \
+            ../../lsMisc/stdQt/stdQt_win32.cpp
+
+    HEADERS += \
+        ../../lsMisc/GetLastErrorString.h
+
+
+    win32-g++ {
+        message("win32-g++")
+        LIBS += -lshlwapi -lPsapi
+    }
+    win32-msvc* {
+        message("win32-msvc*")
+        LIBS += User32.lib
+    }
+}
+linux {
+    message("linux-g++")
+
+    SOURCES += \
+        ../../lsMisc/stdQt/stdQt_linux.cpp
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
